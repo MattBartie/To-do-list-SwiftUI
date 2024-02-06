@@ -10,9 +10,11 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var completed = false
-    @State private var completedArray: [Bool] = [false, false, false]
-    @State private var toDoList: [toDos] = [toDos(task: "Homework 12 for CS1501, test test, tesing", date: [12, 2, 2023], completed: false), toDos(task: "Lab 3 for CS449", date: [12, 2, 2023], completed: false), toDos(task: "Mail cards", date: [12, 2, 3321], completed: false)]
+    
+    @State private var toDoList: [toDos] = [
+        toDos(task: "Homework 12 for CS1501, test test, tesing", date: [12, 2, 2023], completed: false),
+        toDos(task: "Lab 3 for CS449", date: [12, 2, 2023], completed: false),
+        toDos(task: "Mail cards", date: [12, 2, 3321], completed: false)]
     
     var body: some View {
         ZStack(alignment: .topLeading){
@@ -80,12 +82,13 @@ struct ToDoText: View{
 
 struct addButton: View {
     @Binding var toDoList: [toDos]
+    @State private var showingAddToDo = false
+
     var body: some View {
         HStack(){
             Spacer()
-            
             Button{
-                addToDo(toDoList: $toDoList)
+                showingAddToDo = true
             }label: {
                 Image(systemName: "plus.circle.fill")
                     .renderingMode(.original)
@@ -93,9 +96,21 @@ struct addButton: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 50, height: 50)
                     .padding(.trailing, 20)
-                
-                
             }
         }
+        .sheet(isPresented: $showingAddToDo) {
+            ZStack {
+                // Dark background with subtle gradient:
+                LinearGradient(gradient: Gradient(colors: [Color(red: 0.14, green: 0.12, blue: 0.16), Color(red: 0.1, green: 0.08, blue: 0.12)]), startPoint: .top, endPoint: .bottom)
+                    .edgesIgnoringSafeArea(.all)
+
+                // Content with appropriate text and accent color:
+                addToDo(toDoList: $toDoList)
+                    .padding() // Add some padding for visual breathing room
+                    .foregroundColor(.white) // Use white for text and icons
+                    .accentColor(.blue) // Accentuate interactive elements with blue
+            }
+        }
+
     }
 }

@@ -46,20 +46,23 @@ struct toDoButton: View {
 }
 
 
-struct addToDo: View{
-    @State private var userInput = ""
-    @Binding var toDoList: [toDos]
-    var body: some View{
-        VStack {
-            TextField("Enter text here", text: $userInput)
-                .padding()
-            Button(action: {
-                let newTask = toDos(task: userInput, date: [12, 2, 2023], completed: false)
-                toDoList.append(newTask)
-            }) {
-                Text("Submit")
-            }
-        }
-        
+struct addToDo: View {
+  @State private var userInput = ""
+  @Binding var toDoList: [toDos]
+
+  var body: some View {
+    VStack {
+      // Add label and TextField with accessibility label
+      TextField("Enter task here", text: $userInput)
+        .padding()
+        .accessibilityLabel("New to-do item")
+
+      Button(action: {
+        let newTask = toDos(task: userInput, date: [12, 2, 2023], completed: false)
+        toDoList.append(newTask)
+      }) {
+        Text("Submit")
+      }
     }
+  }
 }
