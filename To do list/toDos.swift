@@ -17,6 +17,7 @@ struct toDos{
 
 struct toDoButton: View {
     @State var thisButton: toDos
+    @Binding var updateN: Bool
     var body: some View {
                 HStack{
                     ZStack{
@@ -34,6 +35,8 @@ struct toDoButton: View {
                 }
                 Button(){
                     thisButton.completed.toggle()
+                    updateN.toggle()
+                    
                 }label: {
                     Rectangle()
                         .fill(Color.clear)
@@ -47,22 +50,32 @@ struct toDoButton: View {
 
 
 struct addToDo: View {
-  @State private var userInput = ""
-  @Binding var toDoList: [toDos]
+    @State private var userInput = ""
+    @Binding var toDoList: [toDos]
+    @Binding var sheetVis: Bool
 
-  var body: some View {
-    VStack {
-      // Add label and TextField with accessibility label
-      TextField("Enter task here", text: $userInput)
-        .padding()
-        .accessibilityLabel("New to-do item")
+    var body: some View {
+        VStack {
+            TextField("Enter task here", text: $userInput)
+                .padding()
 
-      Button(action: {
-        let newTask = toDos(task: userInput, date: [12, 2, 2023], completed: false)
-        toDoList.append(newTask)
-      }) {
-        Text("Submit")
-      }
+            Button(action: {
+                let currentDate = Date()
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([.month], from: currentDate)
+                
+                let newTask = toDos(task: userInput, date: [components.month ?? 0, components.day ?? 0, components.year ?? 0], completed: false)
+                toDoList.append(newTask)
+                sheetVis = false
+            }) {
+                Text("ADD TASK")
+                    .background(LinearGradient(gradient: Gradient(colors: [Color(red: 0.4, green: 0.4, blue: 0.45),
+                                Color(red: 0.4, green: 0.4, blue: 0.45)]), startPoint: .top, endPoint: .bottom))
+                    .cornerRadius(3)
+                    .padding(0)
+                    
+            }
+            
+        }
     }
-  }
 }

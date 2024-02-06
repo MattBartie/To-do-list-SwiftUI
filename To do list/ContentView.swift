@@ -15,6 +15,7 @@ struct ContentView: View {
         toDos(task: "Homework 12 for CS1501, test test, tesing", date: [12, 2, 2023], completed: false),
         toDos(task: "Lab 3 for CS449", date: [12, 2, 2023], completed: false),
         toDos(task: "Mail cards", date: [12, 2, 3321], completed: false)]
+    @State private var updateN = false
     
     var body: some View {
         ZStack(alignment: .topLeading){
@@ -25,7 +26,9 @@ struct ContentView: View {
                     VStack(alignment: .leading){
                         //Adds each Todo item to view
                         ForEach(toDoList.indices, id: \.self) { index in
-                            toDoButton(thisButton: toDoList[index])
+                            if toDoList[index].completed == false{
+                                toDoButton(thisButton: toDoList[index], updateN: $updateN)
+                            }
                         }
                         
                     }
@@ -100,15 +103,15 @@ struct addButton: View {
         }
         .sheet(isPresented: $showingAddToDo) {
             ZStack {
-                // Dark background with subtle gradient:
-                LinearGradient(gradient: Gradient(colors: [Color(red: 0.14, green: 0.12, blue: 0.16), Color(red: 0.1, green: 0.08, blue: 0.12)]), startPoint: .top, endPoint: .bottom)
+                LinearGradient(gradient: Gradient(colors: [Color(red: 0.04, green: 0.12, blue: 0.16),
+                                                           Color(red: 0.2, green: 0.18, blue: 0.22)]), startPoint: .top, endPoint: .bottom)
                     .edgesIgnoringSafeArea(.all)
 
-                // Content with appropriate text and accent color:
-                addToDo(toDoList: $toDoList)
-                    .padding() // Add some padding for visual breathing room
-                    .foregroundColor(.white) // Use white for text and icons
-                    .accentColor(.blue) // Accentuate interactive elements with blue
+                
+                addToDo(toDoList: $toDoList, sheetVis: $showingAddToDo)
+                    .padding()
+                    .foregroundColor(.white) //text and icons
+                    .accentColor(.blue) //interactive elements with blue
             }
         }
 
